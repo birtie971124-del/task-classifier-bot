@@ -18,13 +18,13 @@ handler = WebhookHandler(LINE_CHANNEL_SECRET)
 def webhook():
     return "OK", 200
 
-# ✅ 收到文字就回一句話
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text="我收到你的訊息了 👍")
+        TextSendMessage(text=f"我收到你的訊息了：{event.message.text}")
     )
+
 
 
 # ⭐ 給 Vercel 用（本機不會用到）
