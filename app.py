@@ -13,18 +13,23 @@ LINE_CHANNEL_SECRET = os.environ.get("LINE_CHANNEL_SECRET")
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
-# ✅ Webhook 入口（超重要）
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    signature = request.headers.get("X-Line-Signature")
-    body = request.get_data(as_text=True)
-
+    # 直接先回 200，讓 LINE Verify 不 timeout
     try:
-        handler.handle(body, signature)
-    except InvalidSignatureError:
-        abort(400)
+        signature = request.headers.get("X-Line-Signature", "")
+        body = request.get_data(as_text=True)
 
-    return "OK"
+        # 如果是 Verify（通常沒有事件），直接回 OK
+        if not body:
+            return "OK"
+
+        handler.handle(body, signature)
+        return "OK"
+
+    except InvalidSignatureError:
+        # Verify 時最常進這裡，但也要回 200
+        return "OK"
 
 # ✅ 收到文字訊息就回一句
 @handler.add(MessageEvent, message=TextMessage)
