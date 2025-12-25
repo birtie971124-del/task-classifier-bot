@@ -16,17 +16,7 @@ handler = WebhookHandler(LINE_CHANNEL_SECRET)
 # ✅ Webhook 入口（最重要）
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    signature = request.headers.get("X-Line-Signature")
-    body = request.get_data(as_text=True)
-
-    try:
-        handler.handle(body, signature)
-    except InvalidSignatureError:
-        abort(400)
-
     return "OK", 200
-
-
 
 # ✅ 收到文字就回一句話
 @handler.add(MessageEvent, message=TextMessage)
