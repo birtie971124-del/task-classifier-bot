@@ -24,8 +24,8 @@ def webhook():
     except InvalidSignatureError:
         abort(400)
 
-    # ⭐⭐⭐ 關鍵：一定要回 200
     return "OK", 200
+
 
 
 # ✅ 收到文字就回一句話
