@@ -28,6 +28,7 @@ def webhook():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     user_text = event.message.text
+    print("收到訊息：", user_text)
 
     line_bot_api.reply_message(
         event.reply_token,
